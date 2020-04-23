@@ -22,7 +22,7 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     
     loop.create_task(bot.run("TOKEN"))
-    loop.create_task(app.start())
+    loop.create_task(app.start("localhost", 5000))
     
     loop.run_forever()
     

@@ -4,9 +4,7 @@ Welcome to dashcord! This library enables you to easily write a working dashboar
 
 ## Installing
 
-This project will be on pip eventually, but during beta testing you will need to install from source.
-
-The install command is as follows: `pip install -U git+https://github.com/prgress/dashcord`.
+To install run: `python -m pip install -U dashcord`
 
 ## Documentation
 

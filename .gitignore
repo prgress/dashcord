@@ -1,5 +1,5 @@
 __pycache__/
 build/
-Dashcord/
+Dashcord.egg-info/
 dist/
 setup.py

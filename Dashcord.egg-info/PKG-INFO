@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: dashcord
-Version: 2.0
+Version: 2.1
 Summary: Create web dashboards with discord.py
 Home-page: https://github.com/prgress/dashcord
 Author: Logan Webb
@@ -11,9 +11,7 @@ Description: # Dashcord
         
         ## Installing
         
-        This project will be on pip eventually, but during beta testing you will need to install from source.
-        
-        The install command is as follows: `pip install -U git+https://github.com/prgress/dashcord`.
+        To install run: `python -m pip install -U dashcord`
         
         ## Documentation
         
