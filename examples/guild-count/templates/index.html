@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Just like normal html files, we link the css file normally. -->
+    <link rel="stylesheet" href="../static/index.css">
+    <!-- Same with javascript -->
+    <script src="../static/index.js"></script>
+
+    <title>Index - Guild Counter</title>
+</head>
+<body>
+    <!--
+        Within the route function, we supply the html file with the variable `guilds`
+        To access variables we use {{variable}}
+    -->
+    {{guilds}}
+
+    <form action="/" method="POST" id="myForm">
+        <label for="fname">Enter your name</label>
+        <input type="text" name="fname">
+        <button type="submit" onclick="submitForm()"></button>
+    </form>
+</body>
+</html>
