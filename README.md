@@ -8,7 +8,7 @@ To install run: `python -m pip install -U dashcord`
 
 ## Documentation
 
-For the current moment, documentation is not available; however, it will be in the near future. For now please read the [examples](https://github.com/prgress/dashcord/tree/master/examples/), and join the support server linked bellow for more help.
+For the moment, documentation is not available; however, it will be in the near future. For now please read the [examples](https://github.com/prgress/dashcord/tree/master/examples/), and join the support server linked bellow for more help.
 
 ## Quick links
 
