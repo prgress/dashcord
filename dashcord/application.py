@@ -193,18 +193,18 @@ class App:
         self.bot.server = self.server
 
     @staticmethod
-    def render_html(front_page, **kwargs):
+    def render_html(fp, **kwargs):
         """
         Load a html file. Supports templating.
 
         Parameters
         ----------
-        front_page
+        fp
             The html file, you don't need to supply the directory path.
         **kwargs
             Keyword arguments in this function are used to give the data to the html file for templating.
         """
-        with open(front_page, "r") as html_file:
+        with open(fp, "r") as html_file:
             contents = html_file.read()
 
             for token, body in dict(kwargs).items():
