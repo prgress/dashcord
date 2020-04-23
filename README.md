@@ -14,5 +14,5 @@ For the current moment, documentation is not available; however, it will be in t
 
 ## Quick links
 
-[GitHub Repository](https://github.com/prgress/dashcord)
+[GitHub Repository](https://github.com/prgress/dashcord) |
 [Discord Server](https://discordapp.com/invite/29facP4)
