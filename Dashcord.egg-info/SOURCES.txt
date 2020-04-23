@@ -1,0 +1,10 @@
+README.md
+setup.py
+dashcord/__init__.py
+dashcord/application.py
+dashcord.egg-info/PKG-INFO
+dashcord.egg-info/SOURCES.txt
+dashcord.egg-info/dependency_links.txt
+dashcord.egg-info/not-zip-safe
+dashcord.egg-info/requires.txt
+dashcord.egg-info/top_level.txt
