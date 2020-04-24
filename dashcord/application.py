@@ -5,6 +5,7 @@ import urllib
 import socket
 from socketserver import ThreadingMixIn
 from http.server import SimpleHTTPRequestHandler, HTTPServer
+from jinja2 import Template
 
 import nest_asyncio
 
@@ -202,10 +203,8 @@ class App:
         with open("%s/%s" % (self.template_path, fp), "r") as html_file:
             contents = html_file.read()
 
-            for token, body in dict(kwargs).items():
-                contents = contents.replace("{{%s}}" % str(token), str(body))
-
-            return contents
+            template = Template(contents)
+            return template.render(**kwargs)
 
     def begin_server(self, host, port):
         while True:
