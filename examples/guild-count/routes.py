@@ -13,7 +13,7 @@ async def index(bot, request):
         # to the template formatter.
         guilds = len(bot.guilds)
         
-        return bot.dashboard.render_html("index.html", guilds=guilds)
+        return await bot.dashboard.render_html("index.html", guilds=guilds)
         # bot.dashboard.render_html will format the html file for you.
     
     else:
@@ -26,4 +26,4 @@ async def index(bot, request):
         channel = bot.get_channel(ID)
         await channel.send("We just made a POST request with the data: `{}`".format(str(json)))
         
-        return bot.dashboard.render_html("index.html", guilds=guilds)
+        return await bot.dashboard.render_html("index.html", guilds=guilds)

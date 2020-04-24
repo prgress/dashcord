@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix="!", case_insensitive=True)
 async def on_ready():
     print("Bot ready")
     # We start the dashboard in the on_ready event, to ensure everything works
-    bot.dashboard.start("localhost", 5000)
+    await bot.dashboard.start("localhost", 5000)
     # dashcord.App.start() takes the host and port for your server. To run it on your IP set the host to "0.0.0.0"
     
 # The dashcord.App class takes your bot object, the path to your template folder,

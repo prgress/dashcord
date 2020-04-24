@@ -188,12 +188,7 @@ class App:
         DATA.bot = bot
         DATA.loop = self.loop
 
-        self.server = ThreadingSimpleServer(("localhost", PORT), HTTPRequestHandler)
-
-        self.bot.server = self.server
-
-    @staticmethod
-    def render_html(fp, **kwargs):
+    def render_html(self, fp, **kwargs):
         """
         Load a html file. Supports templating.
 
@@ -204,7 +199,7 @@ class App:
         **kwargs
             Keyword arguments in this function are used to give the data to the html file for templating.
         """
-        with open(fp, "r") as html_file:
+        with open("%s/%s" % (self.template_path, fp), "r") as html_file:
             contents = html_file.read()
 
             for token, body in dict(kwargs).items():
@@ -212,14 +207,16 @@ class App:
 
             return contents
 
-    async def start(self, url, port):
+    def begin_server(self, host, port):
+        while True:
+            self.bot.server.handle_request()
+
+    async def start(self, host, port):
         """Start the web server"""
+        print("Serving traffic from", host, "on port", port)
 
-        print("Serving traffic from", HOST, "on port", PORT)
-
-        self.server = ThreadingSimpleServer((url, port), HTTPRequestHandler)
+        self.server = ThreadingSimpleServer((host, port), HTTPRequestHandler)
 
         self.bot.server = self.server
 
-        while True:
-            self.bot.server.handle_request()
+        await self.loop.run_in_executor(None, self.begin_server, host, port)
