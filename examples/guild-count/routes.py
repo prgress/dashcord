@@ -1,10 +1,11 @@
 # This file will contain all of our website's routes
 
+from dashcord import route
 # Route method formating is shown below:
 
-# If your route function is named "index", it's url will be `url/`
+@route("/")
 async def index(bot, request):
-    """The function name is what the URL path will be, e.g url/route_name"""
+    """The url path is defined within the @route decorator"""
     # request.method returns either GET or POST
     if request.method == "GET":
         # We have a GET request.
