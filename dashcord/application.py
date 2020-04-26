@@ -36,7 +36,6 @@ def route(route: str, dynamic: bool = False):
         route {str} -- The path to the route.
         dynamic {bool} -- This should be set to True if the route is dynamic
     """
-    
     def wrapper(func):
         nonlocal route
         arguments = None
@@ -60,8 +59,8 @@ def route(route: str, dynamic: bool = False):
                     regex = regex.replace(variable, REGEX["str"])
                 
                 DATA.dynamics[regex] = (func, route, True, arguments, regex)
-
-        DATA.routes[route] = (func, route, dynamic, arguments, regex)
+        else:
+            DATA.routes[route] = (func, route, dynamic, arguments, regex)
 
         return func
 
@@ -183,10 +182,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
         """This function handles the POST requests for the site."""
 
-        path = self.path.replace("/", "")
-
-        if path == "":
-            path = "index"
+        path = self.path
 
         if path.endswith(".js"):
             self.send_header("Content-type", "application/javascript")
@@ -214,17 +210,37 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
 
         response = HTTPResponse("POST", {"json": json})
 
-
-        if path in dir(DATA.routing_file):
-            route_func = getattr(DATA.routing_file, path)
+        dynamic = False
+        if path in DATA.routes.keys():
+            route_data = DATA.routes.get(path)
+            route_func = route_data[0]
+            
         else:
-            return self.wfile.write(b"404, page not found")
+            if not path.endswith(".ico") and len(path.split("/")) > 1:
+                for r in DATA.dynamics.keys():
+                    match = re.match(r, path)
+                    if not match:
+                        continue
+
+                    match_object = match
+
+                    if match.groups():
+                        route_data = DATA.dynamics[r]
+                        break
+                else:
+                    return self.wfile.write(b"404, page not found")
+
+                route_func = route_data[0]
+                dynamic = True
+            else:
+                return self.wfile.write(b"404, page not found")
+
 
         self.send_response(200)
 
         if not inspect.iscoroutinefunction(route_func):
             raise ValueError("Route function must be a coroutine.")
-
+        
         try:
             kwargs = {}
             if dynamic:
@@ -274,7 +290,7 @@ class App:
             App(..., routing_file=routing_file)
             ```
         """
-
+        self.started = False
         DATA.app = self
         
         self.bot = bot
@@ -319,7 +335,10 @@ class App:
 
     async def start(self, host, port):
         """Start the web server"""
-            
+        if self.started:
+            return
+        
+        self.started = True
         print("Serving traffic from", host, "on port", port)
 
         self.server = ThreadingSimpleServer((host, port), HTTPRequestHandler)
