@@ -69,7 +69,7 @@ def route(route: str, dynamic: bool = False):
 class HTTPResponse:
     """Object to hold data about the response. No data is given if a GET request is passed."""
 
-    def __init__(self, method, local_data=None):
+    def __init__(self, method, **kwargs):
         """
         Parameters:
                 method {[string]} -- The request method. Either GET or POST
@@ -80,15 +80,21 @@ class HTTPResponse:
 
         self.method = method
 
-        self._original_data = local_data
+        self._original_data = kwargs.get("local_data")
+        
+        self.arguments = kwargs.get("arguments")
 
-        if local_data:
-            self._json = local_data.get("json")
+        if self._original_data:
+            self._json = self._original_data.get("json")
 
 
     async def json(self):
         """Get the response json"""
         return self._json
+    
+    def _update_json(self, new_json):
+        """Update the request json"""
+        self._json = new_json
 
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
@@ -103,7 +109,20 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
             return self.wfile.write(b"Bot not supplied, wait a few seconds and refresh.")
 
         path = self.path
-
+        
+        if len(path.split("?")) > 1:
+            split = path.split("?")
+            path = split[0]
+            
+            data = {}
+            
+            for item in split[1].split("&"):
+                data[item.split("=")[0]] = item.split("=")[1]
+            
+            response = HTTPResponse("GET", arguments=data)
+        else:
+            response = HTTPResponse("GET")
+            
         if path.endswith(".js"):
             self.send_header("Content-type", "application/javascript")
 
@@ -161,9 +180,9 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
                     except ValueError:
                         return self.wfile.write(b"404, page not found")
 
-                result = DATA.loop.run_until_complete(route_func(DATA.bot, HTTPResponse("GET"), **kwargs))
+                result = DATA.loop.run_until_complete(route_func(DATA.bot, response, **kwargs))
             else:
-                result = DATA.loop.run_until_complete(route_func(DATA.bot, HTTPResponse("GET")))
+                result = DATA.loop.run_until_complete(route_func(DATA.bot, response))
 
         except RuntimeError as error:
             if str(error).startswith("Cannot enter into task"):
@@ -183,7 +202,20 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
         """This function handles the POST requests for the site."""
 
         path = self.path
-
+        
+        if len(path.split("?")) > 1:
+            split = path.split("?")
+            path = split[0]
+            
+            data = {}
+            
+            for item in split[1].split("&"):
+                data[item.split("=")[0]] = item.split("=")[1]
+            
+            response = HTTPResponse("POST", arguments=data)
+        else:
+            response = HTTPResponse("POST")
+            
         if path.endswith(".js"):
             self.send_header("Content-type", "application/javascript")
 
@@ -208,7 +240,7 @@ class HTTPRequestHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
 
-        response = HTTPResponse("POST", {"json": json})
+        response._update_json({"json": json})
 
         dynamic = False
         if path in DATA.routes.keys():
