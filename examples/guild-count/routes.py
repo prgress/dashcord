@@ -23,6 +23,7 @@ async def index(bot, request):
         # the form.
         
         json = await request.json()
+        guilds = len(bot.guilds)
         
         channel = bot.get_channel(ID)
         await channel.send("We just made a POST request with the data: `{}`".format(str(json)))
